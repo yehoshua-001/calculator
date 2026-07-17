@@ -8,8 +8,8 @@
         <script src="script.js" defer></script>
     </head>
     <body>
-        <div class="container">
-            <input type="text">
+        <div class="calculator">
+            <input id="display" type="text" value="" readonly>
             <div class="buttons">
                 <div class="operators">
                     <button id="operator">+</button>
@@ -28,13 +28,14 @@
                         <button id="number">1</button>
                         <button id="number">2</button>
                         <button id="number">3</button>
-                        <button id="number">0</button>
-                        <button id="option">.</button>
+                        <button id="number" style="width: 205px;">0</button>
+                        <button id="decimal">.</button>
                     </div>
                     <div class="options">
+                        <button id="option"><</button>
                         <button id="option">C</button>
-                        <button id="option">=</button>
-                    </div>                    
+                        <button id="equal" style="height: 200px;">=</button>
+                    </div>
                 </div>
             </div>
         </div>
