@@ -24,21 +24,20 @@ let operator;
 let b;
 
 function operate(a, b, operator){
-    switch(operator){
-        case '+':
-            return add(a, b);
-            break;
-        case '-':
-            return subtract(a, b);
-            break;
-        case '*':
-            return multiply(a, b);
-            break;
-        case '/':
-            return divide(a, b);
-            break;
-        default:
-            return NaN;
+    if(operator === '+'){
+        return add(a, b);
+    }
+
+    if(operator === '-'){
+        return subtract(a, b);
+    }
+
+    if(operator === '*'){
+        return multiply(a, b);
+    }
+    
+    if(operator === '/'){
+        return divide(a, b);
     }
 };
 
@@ -46,12 +45,13 @@ const calculator = document.querySelector('.calculator');
 const display = document.querySelector('#display');
 const nums = Array.from(document.querySelectorAll('#number'));
 const operators = Array.from(document.querySelectorAll('#operator'));
-const options = Array.from(document.querySelectorAll('#option'));
-const decimal = document.querySelector('#equal');
+const decimal = document.querySelector('#decimal');
+const isEqualTo = document.querySelector('#equal');
+const clear = document.querySelector('#clear');
+const allClear = document.querySelector('#allClear');
 let result;
 
 let input = "";
-
 nums.map((button) => {
     button.addEventListener('click', () => {
         input += button.textContent;
@@ -66,8 +66,8 @@ nums.map((button) => {
             display.value = Number(input);
         }
         else{
-            display.value = `${a} ${operator} ${Number(input)}`
             b = Number(input);
+            display.value = `${a} ${operator} ${Number(input)}`
         }
     });
 });
@@ -95,4 +95,60 @@ operators.map((button) => {
             decimal.disabled = false;
         }
     });
+});
+
+let isDecimalClicked = false;
+decimal.addEventListener('click', () => {
+    isDecimalClicked = true;
+    display.value = input += decimal.textContent;
+});
+
+isEqualTo.addEventListener('click', () => {
+    if(a === undefined || b === undefined || !operator){
+        display.value = "";
+    }
+    else{
+        result = operate(a, b, operator);
+        display.value = result;
+        a = result;
+        b = undefined;
+        input = "";
+    }
+});
+
+clear.addEventListener('click', () => {
+    if(clear.textContent === "C"){
+        if(result != undefined){
+            a = undefined;
+            b = undefined;
+            operator = undefined;
+            input = "";
+            result = undefined;
+            display.value = "";
+            return;
+        }
+
+        if(input.length > 0){
+            input = input.slice(0, -1);
+        }
+
+        if(a === undefined){
+            display.value = input;
+        }
+        else if(operator && input === ""){
+            display.value = `${a} ${operator}`;
+        }
+        else{
+            b = input ? Number(input) : undefined;
+            display.value = `${a} ${operator} ${input ? input : ''}`;
+        }
+    }
+});
+
+allClear.addEventListener('click', () => {
+    a = undefined;
+    b = undefined;
+    operator = undefined;
+    input = "";
+    display.value = "";
 });
