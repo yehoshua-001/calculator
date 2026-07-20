@@ -20,8 +20,8 @@ const divide = function(a, b){
 };
 
 let a;
-let operator;
 let b;
+let operator;
 
 function operate(a, b, operator){
     if(operator === '+'){
@@ -32,7 +32,7 @@ function operate(a, b, operator){
         return subtract(a, b);
     }
 
-    if(operator === '*'){
+    if(operator === 'x'){
         return multiply(a, b);
     }
     
@@ -41,3 +41,52 @@ function operate(a, b, operator){
     }
 };
 
+const display = document.querySelector(`#display`);
+const numbers = Array.from(document.querySelectorAll(`#number`));
+const operators = Array.from(document.querySelectorAll(`#operator`));
+
+let input = "";
+let result = "";
+
+numbers.forEach((number) => {
+    number.addEventListener('click', () => {
+        input += number.textContent;
+        if(a === undefined){
+            display.value = Number(input);
+        }
+        else if(result){
+            result = undefined;
+            a = undefined;
+            b = undefined;
+            operator = undefined;
+            display.value = Number(input);
+        }
+        else{
+            display.value = `${a} ${operatorValue} ${Number(input)}`;
+            b = Number(input);
+        }
+    });
+});
+
+operators.forEach((operator) => {
+    operator.addEventListener('click', () => {
+        if(a === undefined){
+            a = Number(input);
+        }
+        else if(b === undefined){
+            b = Number(input);
+        }
+
+        if(a && b){
+            result = operate(a, b, operatorValue)
+            display.value = result;
+            a = result;
+            b = undefined;
+        }
+
+        operatorValue = operator.textContent;
+        input = "";
+        display.value = `${a} ${operatorValue}`;
+        result = undefined;
+    });
+});
