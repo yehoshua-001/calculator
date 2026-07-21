@@ -44,9 +44,14 @@ function operate(a, b, operator){
 const display = document.querySelector(`#display`);
 const numbers = Array.from(document.querySelectorAll(`#number`));
 const operators = Array.from(document.querySelectorAll(`#operator`));
+// const buttons = document.querySelectorAll(`button`);
+const isEqualTo = document.querySelector(`#equal`);
+const clear = document.querySelector(`#clear`);
+const allClear = document.querySelector(`#allClear`);
 
 let input = "";
 let result = "";
+display.value = "0";
 
 numbers.forEach((number) => {
     number.addEventListener('click', () => {
@@ -72,9 +77,11 @@ operators.forEach((operator) => {
     operator.addEventListener('click', () => {
         if(a === undefined){
             a = Number(input);
+            console.log(a);
         }
         else if(b === undefined){
             b = Number(input);
+            console.log(b);
         }
 
         if(a && b){
@@ -89,4 +96,33 @@ operators.forEach((operator) => {
         display.value = `${a} ${operatorValue}`;
         result = undefined;
     });
+});
+
+isEqualTo.addEventListener('click', () => {
+    if(a === undefined || b === undefined || !operatorValue){
+        display.value = "0";
+    }
+    else{
+        result = operate(a, b, operatorValue);
+        display.value = result;
+        a = result;
+        b = undefined;
+        input = "";
+    }
+});
+
+clear.addEventListener('click', () => {
+    input = input.slice(0, -1);
+    display.value = input;
+    if(input.length === 0){
+        display.value = "0";
+    }
+});
+
+allClear.addEventListener('click', () => {
+    a = undefined;
+    b = undefined;
+    operatorValue = undefined;
+    input = "";
+    display.value = "0";
 });
