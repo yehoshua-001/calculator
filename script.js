@@ -44,10 +44,10 @@ function operate(a, b, operator){
 const display = document.querySelector(`#display`);
 const numbers = Array.from(document.querySelectorAll(`#number`));
 const operators = Array.from(document.querySelectorAll(`#operator`));
-// const buttons = document.querySelectorAll(`button`);
 const isEqualTo = document.querySelector(`#equal`);
 const clear = document.querySelector(`#clear`);
 const allClear = document.querySelector(`#allClear`);
+const decimal = document.querySelector(`#decimal`);
 
 let input = "";
 let result = "";
@@ -67,7 +67,7 @@ numbers.forEach((number) => {
             display.value = Number(input);
         }
         else{
-            display.value = `${a} ${operatorValue} ${Number(input)}`;
+            display.value = `${a}${operatorValue}${Number(input)}`;
             b = Number(input);
         }
     });
@@ -77,11 +77,9 @@ operators.forEach((operator) => {
     operator.addEventListener('click', () => {
         if(a === undefined){
             a = Number(input);
-            console.log(a);
         }
         else if(b === undefined){
             b = Number(input);
-            console.log(b);
         }
 
         if(a && b){
@@ -93,29 +91,46 @@ operators.forEach((operator) => {
 
         operatorValue = operator.textContent;
         input = "";
-        display.value = `${a} ${operatorValue}`;
+        display.value = `${a}${operatorValue}`;
         result = undefined;
     });
 });
 
 isEqualTo.addEventListener('click', () => {
     if(a === undefined || b === undefined || !operatorValue){
-        display.value = "0";
+        display.value = display.value;
+    }
+    else if(a && b && operatorValue){
+        result = operate(a, b, operatorValue);
+        if(!Number.isInteger(result)){
+            a = Number(result.toFixed(4));
+            display.value = a;
+            b = undefined;
+            input = "";
+        }
+        else{
+            a = result;
+            display.value = a;
+            b = undefined;
+            input = "";            
+        }
     }
     else{
-        result = operate(a, b, operatorValue);
-        display.value = result;
-        a = result;
-        b = undefined;
-        input = "";
+        display.value = "Error";
     }
+    
 });
 
 clear.addEventListener('click', () => {
-    input = input.slice(0, -1);
-    display.value = input;
-    if(input.length === 0){
-        display.value = "0";
+    if(display.value.length > 0){
+        display.value = display.value.slice(0, -1);
+        if(display.value.length === 0){
+            a = undefined;
+            b = undefined;
+            operator = undefined;
+            input = "";
+            display.value = "0";
+        }
     }
 });
 
@@ -125,4 +140,14 @@ allClear.addEventListener('click', () => {
     operatorValue = undefined;
     input = "";
     display.value = "0";
+});
+
+decimal.addEventListener(`click`, () => {
+    input += decimal.textContent;
+    if(a === undefined){
+        display.value = input;
+    }
+    else{
+        display.value = `${a}${operatorValue}${input}`;
+    }
 });
