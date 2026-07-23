@@ -88,11 +88,23 @@ operators.forEach((operator) => {
             a = result;
             b = undefined;
         }
+        if(result){
+            if(!Number.isInteger(result)){
+                precision = countDecimals(result);
+                result = roundToPrecision(result, precision);
+                a = Number(result.toFixed(4));
+                display.value = a;
+                b = undefined;
+                input = "";
+                decimal.disabled = false;
+            }
+        }
 
         operatorValue = operator.textContent;
         input = "";
         display.value = `${a}${operatorValue}`;
         result = undefined;
+        decimal.disabled = false;
     });
 });
 
@@ -103,16 +115,20 @@ isEqualTo.addEventListener('click', () => {
     else if(a && b && operatorValue){
         result = operate(a, b, operatorValue);
         if(!Number.isInteger(result)){
+            precision = countDecimals(result);
+            result = roundToPrecision(result, precision);
             a = Number(result.toFixed(4));
             display.value = a;
             b = undefined;
             input = "";
+            decimal.disabled = false;
         }
         else{
             a = result;
             display.value = a;
             b = undefined;
-            input = "";            
+            input = "";
+            decimal.disabled = false;
         }
     }
     else{
@@ -145,9 +161,30 @@ allClear.addEventListener('click', () => {
 decimal.addEventListener(`click`, () => {
     input += decimal.textContent;
     if(a === undefined){
-        display.value = input;
+        if(!display.value.includes(".")){
+            display.value = input;
+            decimal.disabled = true;
+        }
+        else if(display.value === "" || display.value === 0)
+            display.value = `0${input}`;
+    }
+    else if(result){
+        a = undefined;
+        b = undefined;
+        operatorValue = 0;
+        display.value = `0${input}`;
     }
     else{
         display.value = `${a}${operatorValue}${input}`;
+        decimal.disabled = true;
     }
 });
+
+function countDecimals(result){
+    const parts = result.toString().split(".");
+    return parts[1] ? parts[1].length : 0;
+};
+function roundToPrecision(result, precision){
+    const factor = Math.pow(10, precision);
+    return Math.round(result * factor) / factor;
+};
