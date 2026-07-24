@@ -19,8 +19,8 @@ body {
     align-items: center;
     flex-direction: column;
     border: 1px solid black;
-    width: 700px;
-    height: 1000px;
+    width: 500px;
+    height: 750px;
     border-radius: 20px;
 }
 
@@ -29,7 +29,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 260px;
+    height: 220px;
 }
 
 h1 {
@@ -38,17 +38,18 @@ h1 {
 
 .display {
     width: 100%;
-    height: 200px;
+    height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
+    /* border: 1px solid black; */
 }
 
 input {
     text-align: right;
     padding-right: 20px;
-    font-size: 4rem;
-    width: 80%;
+    font-size: 3.3rem;
+    width: 75%;
     height: 100%;
     border-radius: 10px;
 }
@@ -58,9 +59,10 @@ input {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 565px;
-    height: 100%;
-    gap: 15px;
+    width: 370px;
+    height: 80%;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 .operators,
@@ -68,7 +70,7 @@ input {
 .options {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
 }
 
 .partition {
@@ -77,8 +79,8 @@ input {
 }
 
 button {
-    width: 130px;
-    height: 110px;
+    width: 85px;
+    height: 70px;
     border-radius: 20px;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
