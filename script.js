@@ -15,7 +15,7 @@ const divide = function(a, b){
         return "Error";
     }
     else{
-        return a / b;
+        return a / b;    
     }
 };
 
@@ -24,20 +24,21 @@ let b;
 let operator;
 
 function operate(a, b, operator){
-    if(operator === '+'){
-        return add(a, b);
-    }
-
-    if(operator === '-'){
-        return subtract(a, b);
-    }
-
-    if(operator === 'x'){
-        return multiply(a, b);
-    }
-    
-    if(operator === '/'){
-        return divide(a, b);
+    switch (operator){
+        case "+":
+            return add(a, b);
+        break;
+        case "-":
+            return subtract(a, b);
+        break;
+        case "x":
+            return multiply(a, b);
+        break;
+        case "÷":
+            return divide(a, b);
+        break;
+        default:
+            return "Error";
     }
 };
 
@@ -49,9 +50,13 @@ const clear = document.querySelector(`#clear`);
 const allClear = document.querySelector(`#allClear`);
 const decimal = document.querySelector(`#decimal`);
 
+// document.addEventListener('keyup', (event) => {
+//     console.log('event', event.key)
+// });
+
 let input = "";
 let result = "";
-display.value = "0";
+display.value = 0;
 
 numbers.forEach((number) => {
     number.addEventListener('click', () => {
@@ -75,20 +80,20 @@ numbers.forEach((number) => {
 
 operators.forEach((operator) => {
     operator.addEventListener('click', () => {
+        operatorValue = operator.textContent;
         if(a === undefined){
             a = Number(input);
         }
         else if(b === undefined){
             b = Number(input);
         }
-
-        if(a && b){
+        else if(a || b){
             result = operate(a, b, operatorValue)
-            display.value = result;
             a = result;
             b = undefined;
+            display.value = result;
         }
-        if(result){
+        else if(result){
             if(!Number.isInteger(result)){
                 precision = countDecimals(result);
                 result = roundToPrecision(result, precision);
@@ -99,8 +104,6 @@ operators.forEach((operator) => {
                 decimal.disabled = false;
             }
         }
-
-        operatorValue = operator.textContent;
         input = "";
         display.value = `${a}${operatorValue}`;
         result = undefined;
@@ -109,8 +112,11 @@ operators.forEach((operator) => {
 });
 
 isEqualTo.addEventListener('click', () => {
-    if(a === undefined || b === undefined || !operatorValue){
+    if(a === undefined || b === undefined || operatorValue === undefined){
         display.value = display.value;
+        a = undefined;
+        b = undefined;
+        operator = undefined;
     }
     else if(a && b && operatorValue){
         result = operate(a, b, operatorValue);
@@ -131,10 +137,18 @@ isEqualTo.addEventListener('click', () => {
             decimal.disabled = false;
         }
     }
-    else{
-        display.value = "Error";
+    else if(operatorValue === "÷"){
+        result = operate(a, b, operatorValue);
+        if(b === 0){
+            result = "Error";
+            display.value = result;
+            a = undefined;
+            b = undefined;
+            operator = undefined;
+            input = "";
+            result = undefined;
+        }
     }
-    
 });
 
 clear.addEventListener('click', () => {
@@ -143,9 +157,10 @@ clear.addEventListener('click', () => {
         if(display.value.length === 0){
             a = undefined;
             b = undefined;
+            result = undefined;
             operator = undefined;
             input = "";
-            display.value = "0";
+            display.value = 0;
         }
     }
 });
@@ -155,7 +170,7 @@ allClear.addEventListener('click', () => {
     b = undefined;
     operatorValue = undefined;
     input = "";
-    display.value = "0";
+    display.value = 0;
 });
 
 decimal.addEventListener(`click`, () => {
