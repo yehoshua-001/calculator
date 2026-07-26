@@ -12,7 +12,13 @@ const multiply = function(a, b){
 
 const divide = function(a, b){
     if(b === 0){
-        return "Error";
+        result = "Error";
+        display.value = result;
+        a = undefined;
+        b = undefined;
+        operator = undefined;
+        input = "";
+        result = undefined;
     }
     else{
         return a / b;    
@@ -71,6 +77,13 @@ function numbersHandler(input){
         operator = undefined;
         display.value = Number(input);
     }
+    else if(display.value === "Error"){
+        result = undefined;
+        a = undefined;
+        b = undefined;
+        operator = undefined;
+        display.value = Number(input);
+    }
     else{
         display.value = `${a}${operatorValue}${Number(input)}`;
         b = Number(input);
@@ -92,9 +105,22 @@ function operatorsHandler(operatorValue){
     }
     else if(a || b){
         result = operate(a, b, operatorValue)
-        a = result;
-        b = undefined;
-        display.value = result;
+        if(!Number.isInteger(result)){
+            precision = countDecimals(result);
+            result = roundToPrecision(result, precision);
+            a = Number(result.toFixed(4));
+            display.value = a;
+            b = undefined;
+            input = "";
+            decimal.disabled = false;
+        }
+        else{
+            a = result;
+            display.value = a;
+            b = undefined;
+            input = "";
+            decimal.disabled = false;
+        }
     }
     else if(result){
         if(!Number.isInteger(result)){
@@ -142,7 +168,7 @@ function isEqualTo(){
             decimal.disabled = false;
         }
     }
-    else if(operatorValue === "÷"){
+    else if(operatorValue === "/"){
         result = operate(a, b, operatorValue);
         if(b === 0){
             result = "Error";
@@ -153,6 +179,14 @@ function isEqualTo(){
             input = "";
             result = undefined;
         }
+    }
+    else{
+        result = operate(a, b, operatorValue);
+        a = result;
+        display.value = a;
+        b = undefined;
+        input = "";
+        decimal.disabled = false;
     }
 };
 
@@ -169,6 +203,7 @@ function clearLastInput(){
             operator = undefined;
             input = "";
             display.value = 0;
+            decimal.disabled = false;
         }
     }
 }
@@ -194,14 +229,11 @@ function inputDecimal(){
             display.value = input;
             decimal.disabled = true;
         }
-        else if(display.value === "" || display.value === 0){
-            display.value = `0${input}`;
-        }
     }
     else if(result){
         a = undefined;
         b = undefined;
-        operatorValue = 0;
+        operatorValue = undefined;
         display.value = `0${input}`;
     }
     else{
