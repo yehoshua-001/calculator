@@ -11,6 +11,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #0B090A;
 }
 
 .calculator {
@@ -18,40 +19,62 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
-    border: 1px solid black;
     width: 500px;
     height: 750px;
     border-radius: 20px;
+    background-color: #212529;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0), 0 6px 20px 0 rgba(0, 0, 0);
 }
 
 .header {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
     width: 100%;
     height: 220px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: #000000;
+    color: #ADB5BD;
+}
+
+.links {
+    font-size: 0.8rem;
+    margin-left: 60px;
+}
+
+#odinlink,
+#githublink {
+    color: #ADB5BD;
 }
 
 h1 {
+    font-size: 2.5rem;
     margin: 0;
+    margin-top: 40px;
+    margin-left: 60px;
 }
 
 .display {
     width: 100%;
-    height: 150px;
+    height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;
-    /* border: 1px solid black; */
+    background-color: #000000;
 }
 
 input {
+    font-family: VT323;
+    font-size: 4rem;
     text-align: right;
     padding-right: 20px;
-    font-size: 3.3rem;
     width: 75%;
-    height: 100%;
+    height: 70%;
+    border: 0px;
     border-radius: 10px;
+    background-color: #54655A;
 }
 
 .button-container {
@@ -79,8 +102,26 @@ input {
 }
 
 button {
+    cursor: pointer;
     width: 85px;
     height: 70px;
+    border: 0px;
     border-radius: 20px;
     font-size: 1.3rem;
+    font-weight: 800;
+    background-color: #6C757D;
+}
+
+#operator,
+#equal {
+    background-color: #ADB5BD;
+}
+
+#clear,
+#allClear {
+    background-color: #EB5E28;
+}
+
+#decimal {
+    background-color: #495057;
 }
