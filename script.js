@@ -28,6 +28,7 @@ const divide = function(a, b){
 let a;
 let b;
 let operator;
+let operatorValue;
 
 function operate(a, b, operator){
     switch (operator){
@@ -85,8 +86,8 @@ function numbersHandler(input){
         display.value = Number(input);
     }
     else{
-        display.value = `${a}${operatorValue}${Number(input)}`;
         b = Number(input);
+        display.value = `${a}${operatorValue}${Number(input)}`;
     }
 };
 
@@ -137,6 +138,7 @@ function operatorsHandler(operatorValue){
     display.value = `${a}${operatorValue}`;
     result = undefined;
     decimal.disabled = false;
+    
 };
 
 equals.addEventListener('click', () => {
@@ -194,11 +196,22 @@ clear.addEventListener('click', () => {
     clearLastInput();
 });
 function clearLastInput(){
-    if(display.value.length > 0){
-        input = display.value.slice(0, -1);
-        display.value = input;
-        decimal.disabled = false;
-        if(display.value.length === 0){
+    if (display.value.length > 0) {
+        let lastInput = display.value.slice(-1);
+        input = input.slice(0, -1);
+        display.value = display.value.slice(0, -1);
+        if (lastInput === ".")  decimal.disabled = false;
+
+        if (lastInput === "+" || lastInput === "-" || lastInput === "*" || lastInput === "/") {
+            operatorValue = undefined;
+        } else if (operatorValue !== undefined && b !== undefined) {
+            b = b.toString();
+            b = b.length === 1 ? undefined : Number(b.slice(0, -1));
+        } else if (a !== undefined && b == undefined) {
+            a = a.toString();
+            a = a.length === 1 ? undefined : Number(a.slice(0, -1));
+        }
+        if (display.value.length === 0) {
             a = undefined;
             b = undefined;
             result = undefined;
