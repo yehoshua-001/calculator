@@ -144,7 +144,7 @@ equals.addEventListener('click', () => {
 });
 function isEqualTo(){
     if(a === undefined || b === undefined || operatorValue === undefined){
-        display.value = display.value;
+        display.value = display.value || input;
         a = undefined;
         b = undefined;
         operator = undefined;
@@ -195,7 +195,9 @@ clear.addEventListener('click', () => {
 });
 function clearLastInput(){
     if(display.value.length > 0){
-        display.value = display.value.slice(0, -1);
+        input = display.value.slice(0, -1);
+        display.value = input;
+        decimal.disabled = false;
         if(display.value.length === 0){
             a = undefined;
             b = undefined;
@@ -217,6 +219,7 @@ function allClearInput(){
     operatorValue = undefined;
     input = "";
     display.value = 0;
+    decimal.disabled = false;
 }
 
 decimal.addEventListener(`click`, () => {
@@ -224,7 +227,11 @@ decimal.addEventListener(`click`, () => {
 });
 function inputDecimal(){
     input += decimal.textContent;
-    if(a === undefined){
+    if(display.value == 0){
+        display.value = `0.`;
+        decimal.disabled = true;
+    }
+    else if(a === undefined){
         if(!display.value.includes(".")){
             display.value = input;
             decimal.disabled = true;
@@ -234,10 +241,11 @@ function inputDecimal(){
         a = undefined;
         b = undefined;
         operatorValue = undefined;
-        display.value = `0${input}`;
+        display.value = `0.`;
     }
     else{
-        display.value = `${a}${operatorValue}${input}`;
+        display.value = `${a}${operatorValue}${Number(input)}`;
+        b = Number(input);
         decimal.disabled = true;
     }
 }
@@ -256,11 +264,11 @@ function roundToPrecision(result, precision){
 document.addEventListener('keyup', (event) => {
     const key = event.key;
     if(key >= '0' && key <= '9'){
-        input += key
-        numbersHandler(input)
+        input += key;
+        numbersHandler(input);
     }
     if(key === '+' || key === '-' || key === '*' || key === '/'){
-        operatorValue = key
+        operatorValue = key;
         operatorsHandler(operatorValue);
     }
     if(key === '=' || key === 'Enter'){
