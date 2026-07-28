@@ -13,7 +13,8 @@ const multiply = function(a, b){
 const divide = function(a, b){
     if(b === 0){
         result = "Error";
-        display.value = result;
+        displayValue = result;
+        display();
         a = undefined;
         b = undefined;
         operator = undefined;
@@ -49,7 +50,7 @@ function operate(a, b, operator){
     }
 };
 
-const display = document.querySelector(`#display`);
+const displayBox = document.querySelector(`#display`);
 const numbers = Array.from(document.querySelectorAll(`#number`));
 const operators = Array.from(document.querySelectorAll(`#operator`));
 const equals = document.querySelector(`#equal`);
@@ -59,7 +60,11 @@ const decimal = document.querySelector(`#decimal`);
 
 let input = "";
 let result = "";
-display.value = 0;
+let displayValue = "";
+
+function display(){
+    displayBox.value = displayValue || "0";
+};
 
 numbers.forEach((number) => {
     number.addEventListener('click', () => {
@@ -69,25 +74,29 @@ numbers.forEach((number) => {
 });
 function numbersHandler(input){
     if(a === undefined){
-        display.value = Number(input);
+        displayValue = Number(input);
+        display();
     }
     else if(result){
         result = undefined;
         a = undefined;
         b = undefined;
         operator = undefined;
-        display.value = Number(input);
+        displayValue = Number(input);
+        display();
     }
-    else if(display.value === "Error"){
+    else if(displayBox.value === "Error"){
         result = undefined;
         a = undefined;
         b = undefined;
         operator = undefined;
-        display.value = Number(input);
+        displayValue = Number(input);
+        display();
     }
     else{
         b = Number(input);
-        display.value = `${a}${operatorValue}${Number(input)}`;
+        displayValue = `${a}${operatorValue}${Number(input)}`;
+        display();
     }
 };
 
@@ -104,41 +113,34 @@ function operatorsHandler(operatorValue){
     else if(b === undefined){
         b = Number(input);
     }
-    else if(a || b){
-        result = operate(a, b, operatorValue)
+    
+    if(a && b){
+        result = operate(a, b, operator);
         if(!Number.isInteger(result)){
             precision = countDecimals(result);
             result = roundToPrecision(result, precision);
             a = Number(result.toFixed(4));
-            display.value = a;
+            displayValue = a;
+            display();
             b = undefined;
             input = "";
             decimal.disabled = false;
         }
         else{
             a = result;
-            display.value = a;
+            displayValue = a;
+            display();
             b = undefined;
             input = "";
             decimal.disabled = false;
         }
     }
-    else if(result){
-        if(!Number.isInteger(result)){
-            precision = countDecimals(result);
-            result = roundToPrecision(result, precision);
-            a = Number(result.toFixed(4));
-            display.value = a;
-            b = undefined;
-            input = "";
-            decimal.disabled = false;
-        }
-    }
+    operator = operatorValue;
     input = "";
-    display.value = `${a}${operatorValue}`;
+    displayValue = `${a}${operator}`;
+    display();
     result = undefined;
     decimal.disabled = false;
-    
 };
 
 equals.addEventListener('click', () => {
@@ -146,7 +148,7 @@ equals.addEventListener('click', () => {
 });
 function isEqualTo(){
     if(a === undefined || b === undefined || operatorValue === undefined){
-        display.value = display.value || input;
+        display();
         a = undefined;
         b = undefined;
         operator = undefined;
@@ -157,14 +159,16 @@ function isEqualTo(){
             precision = countDecimals(result);
             result = roundToPrecision(result, precision);
             a = Number(result.toFixed(4));
-            display.value = a;
+            displayValue = a;
+            display();
             b = undefined;
             input = "";
             decimal.disabled = false;
         }
         else{
             a = result;
-            display.value = a;
+            displayValue = a;
+            display();
             b = undefined;
             input = "";
             decimal.disabled = false;
@@ -174,7 +178,8 @@ function isEqualTo(){
         result = operate(a, b, operatorValue);
         if(b === 0){
             result = "Error";
-            display.value = result;
+            displayValue = result;
+            display();
             a = undefined;
             b = undefined;
             operator = undefined;
@@ -185,7 +190,8 @@ function isEqualTo(){
     else{
         result = operate(a, b, operatorValue);
         a = result;
-        display.value = a;
+        displayValue = a;
+        display();
         b = undefined;
         input = "";
         decimal.disabled = false;
@@ -196,10 +202,11 @@ clear.addEventListener('click', () => {
     clearLastInput();
 });
 function clearLastInput(){
-    if (display.value.length > 0) {
-        let lastInput = display.value.slice(-1);
+    if (displayBox.value.length > 0) {
+        let lastInput = displayBox.value.slice(-1);
         input = input.slice(0, -1);
-        display.value = display.value.slice(0, -1);
+        displayValue = displayBox.value.slice(0, -1);
+        display();
         if (lastInput === ".")  decimal.disabled = false;
 
         if (lastInput === "+" || lastInput === "-" || lastInput === "*" || lastInput === "/") {
@@ -211,13 +218,14 @@ function clearLastInput(){
             a = a.toString();
             a = a.length === 1 ? undefined : Number(a.slice(0, -1));
         }
-        if (display.value.length === 0) {
+        if (displayBox.value.length === 0) {
             a = undefined;
             b = undefined;
             result = undefined;
             operator = undefined;
             input = "";
-            display.value = 0;
+            displayValue = 0;
+            display();
             decimal.disabled = false;
         }
     }
@@ -231,7 +239,8 @@ function allClearInput(){
     b = undefined;
     operatorValue = undefined;
     input = "";
-    display.value = 0;
+    displayValue = 0;
+    display();
     decimal.disabled = false;
 }
 
@@ -240,13 +249,16 @@ decimal.addEventListener(`click`, () => {
 });
 function inputDecimal(){
     input += decimal.textContent;
-    if(display.value == 0){
-        display.value = `0.`;
-        decimal.disabled = true;
-    }
-    else if(a === undefined){
-        if(!display.value.includes(".")){
-            display.value = input;
+    if(a === undefined || b === undefined){
+        if(displayBox.value == '0'){
+            displayValue = '0.';
+            display();
+            decimal.disabled = true;
+        }
+        
+        if(!displayBox.value.includes(".")){
+            displayValue = input;
+            display();
             decimal.disabled = true;
         }
     }
@@ -254,10 +266,12 @@ function inputDecimal(){
         a = undefined;
         b = undefined;
         operatorValue = undefined;
-        display.value = `0.`;
+        displayValue = '0.';
+        display();
     }
     else{
-        display.value = `${a}${operatorValue}${Number(input)}`;
+        displayValue = `${a}${operatorValue}${Number(input)}`;
+        display();
         b = Number(input);
         decimal.disabled = true;
     }
@@ -298,3 +312,5 @@ document.addEventListener('keyup', (event) => {
         inputDecimal();
     }
 });
+
+display();
