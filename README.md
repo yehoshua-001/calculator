@@ -7,7 +7,7 @@ This project is an on-screen or browser version of calculator that calculates ba
 
 
 ## Sample
-<img src="images/calculator.png" alt="calculator sample image" width="1000px">
+<img src="assets/calculator.png" alt="calculator sample image" width="1000px">
 
 ## Access
 Method 1
