@@ -4,7 +4,7 @@
 This project is an on-screen or browser version of calculator that calculates basic math operations. The purpose of this project is to apply and demonstrate the skills I learned throughout the Foundations Course of [The Odin Project](https://www.theodinproject.com/about) which includes HTML, CSS, and JavaScript.
 
 ## Demo
-https://github.com/user-attachments/assets/a306f761-bf75-4c72-bc8b-fb345671b40c
+
 
 ## Sample
 <img src="assets/calculator.png" alt="calculator sample image" width="1000px">
