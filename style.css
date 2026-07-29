@@ -96,6 +96,14 @@ input {
     gap: 10px;
 }
 
+[data-key="0"] {
+    width: 180px;
+}
+
+[data-key="Enter"] {
+    height: 150px;
+}
+
 .partition {
     display: flex;
     
@@ -110,14 +118,34 @@ button {
     font-size: 1.3rem;
     font-weight: 800;
     background-color: #6C757D;
+    transition-duration: 0.3s;
 }
 
 #operator,
 #equal {
     background-color: #ADB5BD;
+    transition-duration: 0.3s;
 }
 
 #clear,
 #allClear {
     background-color: #EB5E28;
+    transition-duration: 0.3s;
+}
+
+button:hover {
+    background-color: #000000;
+    color: #6C757D;
+}
+
+#operator:hover,
+#equal:hover {
+    background-color: #000000;
+    color: #ADB5BD;
+}
+
+#clear:hover,
+#allClear:hover {
+    background-color: #000000;
+    color: #EB5E28;
 }
