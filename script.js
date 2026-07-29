@@ -51,12 +51,9 @@ function operate(a, b, operator){
 };
 
 const displayBox = document.querySelector(`#display`);
-const numbers = Array.from(document.querySelectorAll(`#number`));
-const operators = Array.from(document.querySelectorAll(`#operator`));
-const equals = document.querySelector(`#equal`);
-const clear = document.querySelector(`#clear`);
-const allClear = document.querySelector(`#allClear`);
-const decimal = document.querySelector(`#decimal`);
+const buttons = Array.from(document.querySelectorAll(`button`));
+const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const operators = ['+', '-', '*', '/'];
 
 let input = "";
 let result = "";
@@ -66,12 +63,6 @@ function display(){
     displayBox.value = displayValue || "0";
 };
 
-numbers.forEach((number) => {
-    number.addEventListener('click', () => {
-        input += number.textContent;
-        numbersHandler(input);
-    });
-});
 function numbersHandler(input){
     if(a === undefined){
         displayValue = Number(input);
@@ -100,12 +91,6 @@ function numbersHandler(input){
     }
 };
 
-operators.forEach((operator) => {
-    operator.addEventListener('click', () => {
-        operatorValue = operator.textContent;
-        operatorsHandler(operatorValue);
-    });
-});
 function operatorsHandler(operatorValue){
     if(a === undefined){
         a = Number(input);
@@ -143,9 +128,6 @@ function operatorsHandler(operatorValue){
     decimal.disabled = false;
 };
 
-equals.addEventListener('click', () => {
-    isEqualTo();
-});
 function isEqualTo(){
     if(a === undefined || b === undefined || operatorValue === undefined){
         display();
@@ -198,55 +180,51 @@ function isEqualTo(){
     }
 };
 
-clear.addEventListener('click', () => {
-    clearLastInput();
-});
 function clearLastInput(){
-    if (displayBox.value.length > 0) {
+    if(displayBox.value.length > 0){
         let lastInput = displayBox.value.slice(-1);
         input = input.slice(0, -1);
         displayValue = displayBox.value.slice(0, -1);
         display();
-        if (lastInput === ".")  decimal.disabled = false;
+        if(lastInput === '.'){
+            decimal.disabled = false;
+        }
 
-        if (lastInput === "+" || lastInput === "-" || lastInput === "*" || lastInput === "/") {
+        if(operators.includes(lastInput)){
             operatorValue = undefined;
-        } else if (operatorValue !== undefined && b !== undefined) {
+        }
+        else if(operatorValue !== undefined && b !== undefined){
             b = b.toString();
             b = b.length === 1 ? undefined : Number(b.slice(0, -1));
-        } else if (a !== undefined && b == undefined) {
+        }
+        else if(a !== undefined && b === undefined){
             a = a.toString();
             a = a.length === 1 ? undefined : Number(a.slice(0, -1));
         }
-        if (displayBox.value.length === 0) {
+
+        if(displayBox.value.length === 0){
             a = undefined;
             b = undefined;
             result = undefined;
             operator = undefined;
             input = "";
-            displayValue = 0;
+            displayValue = undefined;
             display();
             decimal.disabled = false;
         }
     }
 }
 
-allClear.addEventListener('click', () => {
-    allClearInput();
-});
 function allClearInput(){
     a = undefined;
     b = undefined;
     operatorValue = undefined;
     input = "";
-    displayValue = 0;
+    displayValue = undefined;
     display();
     decimal.disabled = false;
 }
 
-decimal.addEventListener(`click`, () => {
-    inputDecimal();
-});
 function inputDecimal(){
     input += decimal.textContent;
     if(a === undefined || b === undefined){
@@ -287,29 +265,89 @@ function roundToPrecision(result, precision){
     return Math.round(result * factor) / factor;
 };
 
-// Keyboard support
+// Buttons action
+buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+        const buttonValue = button.textContent;
+        if(numbers.includes(buttonValue)){
+            input += buttonValue;
+            numbersHandler(input);
+        }
+        if(operators.includes(buttonValue)){
+            operatorValue = buttonValue;
+            operatorsHandler(operatorValue);
+        }
+        if(buttonValue === '='){
+            isEqualTo();
+        }
+        if(buttonValue === '⌫'){
+            clearLastInput();
+        }
+        if(buttonValue === 'C'){
+            allClearInput();
+        }
+        if(buttonValue === '.'){
+            inputDecimal();
+        }
+    });
+});
+
+// Keyboard support and event style
 document.addEventListener('keyup', (event) => {
     const key = event.key;
-    if(key >= '0' && key <= '9'){
-        input += key;
-        numbersHandler(input);
-    }
-    if(key === '+' || key === '-' || key === '*' || key === '/'){
-        operatorValue = key;
-        operatorsHandler(operatorValue);
-    }
-    if(key === '=' || key === 'Enter'){
-        event.preventDefault();
-        isEqualTo();
-    }
-    if(key === 'Backspace'){
-        clearLastInput();
-    }
-    if(key === 'Escape' || key.toLowerCase() === 'c'){
-        allClearInput();
-    }
-    if(key === '.'){
-        inputDecimal();
+    const targetElement = document.querySelector(`[data-key="${key}"]`);
+    if(targetElement){
+        if(numbers.includes(key)){
+            input += key;
+            numbersHandler(input);
+            targetElement.setAttribute('style', 'background-color: #000000; color: #6C757D;');
+            setTimeout(() => {
+                targetElement.style.removeProperty('background-color');
+                targetElement.style.removeProperty('color');
+            }, 300);
+        }
+        if(operators.includes(key)){
+            operatorValue = key;
+            operatorsHandler(operatorValue);
+            targetElement.setAttribute('style', 'background-color: #000000; color: #ADB5DB;');
+            setTimeout(() => {
+                targetElement.style.removeProperty('background-color');
+                targetElement.style.removeProperty('color');
+            }, 300);
+        }
+        if(key === '=' || key === 'Enter'){
+            event.preventDefault();
+            isEqualTo();
+            targetElement.setAttribute('style', 'background-color: #000000; color: #ADB5BD;');
+            setTimeout(() => {
+                targetElement.style.removeProperty('background-color');
+                targetElement.style.removeProperty('color');
+            }, 300);
+        }
+        if(key === 'Backspace'){
+            clearLastInput();
+            targetElement.setAttribute('style', 'background-color: #000000; color: #EB5E28;');
+            setTimeout(() => {
+                targetElement.style.removeProperty('background-color');
+                targetElement.style.removeProperty('color');
+            }, 300);
+        }
+        if(key === 'Escape' || key.toLowerCase() === 'c'){
+            allClearInput();
+            targetElement.setAttribute('style', 'background-color: #000000; color: #EB5E28;');
+            setTimeout(() => {
+                targetElement.style.removeProperty('background-color');
+                targetElement.style.removeProperty('color');
+            }, 300);
+        }
+        if(key === '.'){
+            inputDecimal();
+            targetElement.setAttribute('style', 'background-color: #000000; color: #6C757D;');
+            setTimeout(() => {
+                targetElement.style.removeProperty('background-color');
+                targetElement.style.removeProperty('color');
+            }, 300);
+        }        
     }
 });
 
